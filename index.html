@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Torneos Gamer Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary:#ff5733;
+            --secondary: #9932CC;
+            --accent: #FF4500;
+            --light: #F8F8FF;
+            --dark: #1A1A1A;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #121212;
+            color: #E0E0E0;
+            line-height: 1.6;
+        }
+        
+        .game-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .game-header h1 {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 2.2rem;
+            margin: 0;
+            text-shadow: 3px 3px 0 #000;
+        }
+        
+        .game-header p {
+            font-size: 1.1rem;
+            margin: 0.5rem 0 0;
+            opacity: 0.9;
+        }
+        
+        .game-nav {
+            background-color: var(--dark);
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid var(--accent);
+        }
+        
+        .game-nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            flex-wrap: wrap;
+        }
+        
+        .game-nav li {
+            margin: 0 1.5rem;
+        }
+        
+        .game-nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+        
+        .game-nav a:hover, .game-nav a.active {
+            background-color: var(--accent);
+            transform: scale(1.05);
+        }
+        
+        .game-nav i {
+            margin-right: 8px;
+            font-size: 1.2rem;
+        }
+        
+        .main-container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+        
+        .content-section {
+            display: none;
+            background-color: #1E1E1E;
+            border-radius: 10px;
+            padding: 2.5rem;
+            margin: 2rem 0;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.4);
+            border: 1px solid #333;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+        
+        .section-title {
+            color: var(--accent);
+            text-align: center;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+        
+        .section-title:after {
+            content: "";
+            display: block;
+            width: 150px;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            margin: 1rem auto 0;
+        }
+    
+        .form-group {
+            margin-bottom: 1.8rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.8rem;
+            font-weight: bold;
+            color: var(--light);
+            font-size: 1.1rem;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 1rem;
+            background-color: #2D2D2D;
+            border: 2px solid #444;
+            border-radius: 6px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.3);
+        }
+        
+        .price-info {
+            background-color: #252525;
+            padding: 1.2rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            text-align: center;
+            border-left: 4px solid var(--accent);
+        }
+        
+        .price-info p {
+            margin: 0;
+            font-size: 1.1rem;
+        }
+        
+        .price-info strong {
+            color: var(--accent);
+            font-size: 1.2rem;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, var(--accent), #FF6347);
+            color: white;
+            border: none;
+            padding: 1.2rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: block;
+            margin: 2.5rem auto 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 69, 0, 0.4);
+        }
+        
+        .submit-btn i {
+            margin-right: 10px;
+        }
+        
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+        
+        .game-card {
+            background-color: #252525;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #444;
+            transition: all 0.3s;
+        }
+        
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .game-img {
+            height: 180px;
+            overflow: hidden;
+        }
+        
+        .game-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .game-body {
+            padding: 1.5rem;
+        }
+        
+        .game-title {
+            color: var(--accent);
+            margin: 0 0 0.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .game-price {
+            color: white;
+            font-weight: bold;
+            font-size: 1.3rem;
+            margin: 0.5rem 0;
+        }
+        
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .contact-icon {
+            background-color: var(--primary);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .about-img img {
+            width: 100%;
+            border-radius: 8px;
+            border: 2px solid var(--accent);
+        }
+        
+        .game-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: #252525;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            padding: 2.5rem;
+            position: relative;
+            border: 2px solid var(--accent);
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.6);
+            animation: modalAppear 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        @keyframes modalAppear {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            color: #aaa;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .modal-close:hover {
+            color: var(--accent);
+        }
+        
+        .modal-title {
+            color: var(--accent);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.3rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .modal-message {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .game-header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .game-nav li {
+                margin: 0 0.8rem;
+            }
+            
+            .game-nav a {
+                font-size: 1rem;
+                padding: 0.5rem;
+            }
+            
+            .content-section {
+                padding: 1.8rem;
+            }
+            
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="game-header">
+        <h1>TORNEOS GAMER PRO</h1>
+        <p>¡Demuestra quien es el pro y compite con los mejores!</p>
+    </header>
+    
+    <nav class="game-nav">
+        <ul>
+            <li><a href="#" class="nav-link active" data-section="juegos"><i class="fas fa-gamepad"></i> Juegos</a></li>
+            <li><a href="#" class="nav-link" data-section="inscripcion"><i class="fas fa-user-plus"></i> Inscripción</a></li>
+            <li><a href="#" class="nav-link" data-section="contacto"><i class="fas fa-envelope"></i> Contacto</a></li>
+            <li><a href="#" class="nav-link" data-section="acerca"><i class="fas fa-users"></i> Acerca de Nosotros</a></li>
+            <li><a href="#" class="nav-link" data-section="games"><i class="fas fa-play-circle"></i> Games</a></li>
+
+        </ul>
+    </nav>
+    
+    <main class="main-container">
+        <!-- Sección Juegos -->
+        <section id="juegos-section" class="content-section active">
+            <h2 class="section-title">Nuestros Juegos</h2>
+            <div class="games-grid">
+                <div class="game-card">
+                    <div class="game-img">
+                        <img src="lol1.jpeg">
+                    </div>
+                    <div class="game-body">
+                        <h3 class="game-title">League of Legends</h3>
+                        <div class="game-price">$50</div>
+                        <p>Competencia 5v5 en Summoner's Rift. Demuestra tu trabajo en equipo y estrategia.</p>
+                    </div>
+                </div>
+                
+                <div class="game-card">
+                    <div class="game-img">
+                        <img src="forni2.jpeg" alt="Fortnite">
+                    </div>
+                    <div class="game-body">
+                        <h3 class="game-title">Fortnite</h3>
+                        <div class="game-price">$60</div>
+                        <p>Battle Royale por equipos. Sobrevive y demuestra tus habilidades de construcción.</p>
+                    </div>
+                </div>
+                
+                <div class="game-card">
+                    <div class="game-img">
+                        <img src="valo2.jpeg" alt="Valorant">
+                    </div>
+                    <div class="game-body">
+                        <h3 class="game-title">Valorant</h3>
+                        <div class="game-price">$70</div>
+                        <p>Competencia 5v5 Plant/Defuse. Precisión y estrategia son clave.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="inscripcion-section" class="content-section">
+            <h2 class="section-title">Formulario de Inscripción</h2>
+            
+            <div class="price-info">
+                <p><strong>Costo base de inscripción: $100</strong> + costo del juego seleccionado</p>
+            </div>
+            
+            <form id="inscripcionForm">
+                <div class="form-group">
+                    <label for="email"><i class="fas fa-envelope"></i> Correo Electrónico</label>
+                    <input type="email" id="email" class="form-control" placeholder="tucorreo@ejemplo.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="nombre"><i class="fas fa-user"></i> Nombre Completo</label>
+                    <input type="text" id="nombre" class="form-control" placeholder="Tu nombre completo" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="nacimiento"><i class="fas fa-birthday-cake"></i> Fecha de Nacimiento</label>
+                    <input type="date" id="nacimiento" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="juego"><i class="fas fa-joystick"></i> Juego para Torneo</label>
+                    <select id="juego" class="form-control" required>
+                        <option value="" disabled selected>Selecciona un juego</option>
+                        <option value="50">League of Legends - $50</option>
+                        <option value="60">Fortnite - $60</option>
+                        <option value="70">Valorant - $70</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="pago"><i class="fas fa-dollar-sign"></i> Monto de Pago</label>
+                    <input type="number" id="pago" class="form-control" min="0" step="0.01" placeholder="Ingresa el monto" required>
+                </div>
+                
+                <button type="submit" class="submit-btn"><i class="fas fa-paper-plane"></i> Enviar Inscripción</button>
+            </form>
+        </section>
+        
+        <section id="contacto-section" class="content-section">
+            <h2 class="section-title">Contacto</h2>
+            <div class="contact-info">
+                <div>
+                    <h3>Información de Contacto</h3>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div>
+                            <h4>Ubicación</h4>
+                            <p>Av. Gamer 1234, Ciudad Gaming</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div>
+                            <h4>Email</h4>
+                            <p>info@torneosgamerpro.com</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <div>
+                            <h4>Teléfono</h4>
+                            <p>+51 925 522 952/p>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h3>Horario de Atención</h3>
+                    <p>Lunes a Viernes: 9:00 - 18:00</p>
+                    <p>Sábados: 10:00 - 16:00</p>
+                    <p>Domingos: Cerrado</p>
+                    
+                    <h3 style="margin-top: 2rem;">Redes Sociales</h3>
+                    <div class="contact-item">
+                        <div class="contact-icon" style="background-color: #3b5998;">
+                            <i class="fab fa-facebook-f"></i>
+                        </div>
+                        <div>
+                            <p>Facebook: /TorneosGamerPro</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon" style="background-color: #1DA1F2;">
+                            <i class="fab fa-twitter"></i>
+                        </div>
+                        <div>
+                            <p>Twitter: @TorneosGPro</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="acerca-section" class="content-section">
+            <h2 class="section-title">Acerca de Nosotros</h2>
+            <div class="about-content">
+                <div class="about-img">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Equipo Torneos Gamer Pro">
+                </div>
+                <div>
+                    <p>Somos una organización apasionada por los esports y la competencia saludable. Desde 2025, hemos organizado torneos que reúnen a la comunidad gamer para celebrar el talento, la estrategia y el trabajo en equipo.</p>
+                    <p>Nuestra misión es crear espacios inclusivos donde jugadores de todos los niveles puedan demostrar sus habilidades, hacer nuevos amigos y, sobre todo, divertirse.</p>
+                    <p>Hemos organizado más de 50 torneos con participación de más de 5,000 jugadores en toda la región.</p>
+                    <p>¡Únete a nuestra comunidad y sé parte de la experiencia Gamer Pro!</p>
+                </div>
+            </div>
+        </section>
+    </main>
+    <!-- Sección Games -->
+<section id="games-section" class="content-section">
+    <h2 class="section-title">Game</h2>
+    
+    <div class="games-grid">
+        <!-- Juego Garbage Collector -->
+        <div class="game-card" style="grid-column: 1 / -1;">
+            <div class="game-body">
+                <h3 class="game-title">Garbage Collector: Modo Estudiante</h3>
+                <p>Recolecta toda la basura antes de que se acabe el tiempo. Usa las flechas del teclado para moverte.</p>
+                
+                <div id="gc-game-container" style="position: relative; width: 100%; height: 500px; background-color: #e3f2fd; margin-top: 20px; border-radius: 8px; overflow: hidden;">
+                    <div id="gc-game">
+                        <div id="gc-info" style="position: absolute; top: 10px; left: 10px; font-size: 18px; background: rgba(255, 255, 255, 0.9); padding: 8px; border-radius: 8px; z-index: 2;">Nivel 1 | Recolectadas: 0 | Tiempo: 60s</div>
+                        <div id="gc-progressBarContainer" style="position: absolute; top: 50px; left: 10px; width: 300px; height: 20px; background: #ddd; border-radius: 10px; overflow: hidden; border: 1px solid #aaa;">
+                            <div id="gc-progressBar" style="height: 100%; background: linear-gradient(to right, #4caf50, #81c784); width: 0%; transition: width 0.3s;"></div>
+                        </div>
+                        <div id="gc-remainingText" style="position: absolute; top: 80px; left: 10px; font-size: 16px; color: #333; background: rgba(255,255,255,0.8); padding: 4px 8px; border-radius: 6px;">Faltan: 10 basuritas</div>
+                        <div id="gc-message" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 36px; display: none; background: white; padding: 20px; border-radius: 10px; z-index: 3;"></div>
+                        <div class="gc-player" id="gc-player" style="position: absolute; width: 60px; height: 60px; background-image: url('https://img.freepik.com/vector-premium/lindo-personaje-estudiante-animal-alpaca-utiles-escolares_28629-2506.jpg'); background-size: cover; border-radius: 50%; left: 100px; top: 100px;"></div>
+                        <audio id="gc-collectSound" src="https://www.soundjay.com/button/beep-07.wav" preload="auto"></audio>
+                    </div>
+                </div>
+                
+                <button id="gc-restartBtn" class="submit-btn" style="margin-top: 20px; padding: 0.8rem 1.5rem; font-size: 1rem;">
+                    <i class="fas fa-redo"></i> Reiniciar Juego
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+    
+    <div id="resultModal" class="game-modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h3 class="modal-title" id="modalTitle">Resultado</h3>
+            <p class="modal-message" id="modalMessage"></p>
+        </div>
+    </div>
+    
+    <script>
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+      
+                document.querySelectorAll('.nav-link').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+             
+                this.classList.add('active');
+                
+              
+                document.querySelectorAll('.content-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                
+              
+                const sectionId = this.getAttribute('data-section') + '-section';
+                document.getElementById(sectionId).classList.add('active');
+            });
+        });
+
+    
+        document.getElementById('juego').addEventListener('change', function() {
+            const costoBase = 100;
+            const costoJuego = parseFloat(this.value) || 0;
+            const total = costoBase + costoJuego;
+            document.querySelector('.price-info').innerHTML = `
+                <p><strong>Costo total: $${total.toFixed(2)}</strong> ($100 base + $${costoJuego.toFixed(2)} del juego)</p>
+            `;
+        });
+
+       
+        document.getElementById('inscripcionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+     
+            const email = document.getElementById('email').value;
+            const nombre = document.getElementById('nombre').value;
+            const nacimiento = document.getElementById('nacimiento').value;
+            const juego = document.getElementById('juego').value;
+            const pago = parseFloat(document.getElementById('pago').value);
+            
+           
+            if (!email || !nombre || !nacimiento || !juego || isNaN(pago)) {
+                showModal('Error', 'Por favor completa todos los campos correctamente.');
+                return;
+            }
+            
+          
+            const fechaNac = new Date(nacimiento);
+            const hoy = new Date();
+            let edad = hoy.getFullYear() - fechaNac.getFullYear();
+            const mes = hoy.getMonth() - fechaNac.getMonth();
+            
+            if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNac.getDate())) {
+                edad--;
+            }
+            
+            if (edad < 14) {
+                showModal('Error', 'Debes tener al menos 14 años para participar.');
+                return;
+            }
+            
+         
+            const costoTotal = 100 + parseFloat(juego);
+            
+            if (pago < costoTotal) {
+                const faltante = costoTotal - pago;
+                showModal('Pago Insuficiente', `El costo total es $${costoTotal.toFixed(2)}.<br><br>Te falta pagar $${faltante.toFixed(2)}.`);
+                return;
+            }
+            
+          
+            if (pago > costoTotal) {
+                const vuelto = pago - costoTotal;
+                showModal('¡Inscripción Exitosa!', `¡${nombre}, estás registrado!<br><br>Tu vuelto es $${vuelto.toFixed(2)}.`);
+            } else {
+                showModal('¡Inscripción Exitosa!', `¡${nombre}, estás registrado!<br><br>No hay vuelto.`);
+            }
+            
+          
+            document.getElementById('inscripcionForm').reset();
+        });
+        
+      
+        function showModal(title, message) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalMessage').innerHTML = message;
+            document.getElementById('resultModal').style.display = 'flex';
+        }
+        
+       
+        document.querySelector('.modal-close').addEventListener('click', function() {
+            document.getElementById('resultModal').style.display = 'none';
+        });
+        
+        
+        window.addEventListener('click', function(e) {
+            if (e.target === document.getElementById('resultModal')) {
+                document.getElementById('resultModal').style.display = 'none';
+            }
+        });
+// Juego Garbage Collector
+document.addEventListener('DOMContentLoaded', function() {
+    const gcPlayer = document.getElementById('gc-player');
+    const gcGame = document.getElementById('gc-game-container');
+    const gcInfo = document.getElementById('gc-info');
+    const gcMessage = document.getElementById('gc-message');
+    const gcProgressBar = document.getElementById('gc-progressBar');
+    const gcRemainingText = document.getElementById('gc-remainingText');
+    const gcCollectSound = document.getElementById('gc-collectSound');
+    const gcRestartBtn = document.getElementById('gc-restartBtn');
+
+    let gcLevel = 1;
+    const gcLevelGoals = [10, 15, 20, 25, 100];
+    let gcCollected = 0;
+    let gcTimeLeft = 60;
+    let gcGarbageTotal = gcLevelGoals[0];
+    let gcPosX = 100, gcPosY = 100;
+    const gcSpeed = 10;
+    let gcTimer;
+
+    function gcUpdateInfo() {
+        gcInfo.textContent = `Nivel ${gcLevel} | Recolectadas: ${gcCollected} | Tiempo: ${gcTimeLeft}s`;
+        const percent = Math.floor((gcCollected / gcGarbageTotal) * 100);
+        gcProgressBar.style.width = `${percent}%`;
+        gcRemainingText.textContent = `Faltan: ${gcGarbageTotal - gcCollected} basuritas`;
+    }
+
+    function gcRandomBackgroundPosition() {
+        const x = Math.floor(Math.random() * 3) * 50;
+        const y = Math.floor(Math.random() * 3) * 50;
+        return `${x}% ${y}%`;
+    }
+
+    function gcCreateGarbage() {
+        for (let i = 0; i < gcGarbageTotal; i++) {
+            const g = document.createElement('div');
+            g.className = 'garbage';
+            g.style.position = 'absolute';
+            g.style.width = '40px';
+            g.style.height = '40px';
+            g.style.backgroundImage = 'url("https://static.vecteezy.com/system/resources/previews/005/315/148/non_2x/garbage-icons-set-cartoon-style-vector.jpg")';
+            g.style.backgroundSize = '300% 300%';
+            g.style.backgroundRepeat = 'no-repeat';
+            g.style.borderRadius = '8px';
+            g.style.left = Math.random() * (gcGame.offsetWidth - 40) + 'px';
+            g.style.top = Math.random() * (gcGame.offsetHeight - 40) + 'px';
+            g.style.backgroundPosition = gcRandomBackgroundPosition();
+            gcGame.appendChild(g);
+        }
+    }
+
+    function gcCheckCollision() {
+        const garbages = document.querySelectorAll('#gc-game-container .garbage');
+        garbages.forEach(g => {
+            const gRect = g.getBoundingClientRect();
+            const pRect = gcPlayer.getBoundingClientRect();
+
+            if (
+                pRect.left < gRect.right &&
+                pRect.right > gRect.left &&
+                pRect.top < gRect.bottom &&
+                pRect.bottom > gRect.top
+            ) {
+                g.remove();
+                gcCollected++;
+                gcCollectSound.currentTime = 0;
+                gcCollectSound.play();
+                gcUpdateInfo();
+                if (gcCollected >= gcGarbageTotal) {
+                    gcNextLevel();
+                }
+            }
+        });
+    }
+
+    function gcMovePlayer(e) {
+    // Solo prevenir el comportamiento por defecto para las teclas de flecha
+    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+        e.preventDefault(); // ← Esto evita que la página se desplace
+    }
+
+    if (e.key === 'ArrowUp') gcPosY -= gcSpeed;
+    if (e.key === 'ArrowDown') gcPosY += gcSpeed;
+    if (e.key === 'ArrowLeft') gcPosX -= gcSpeed;
+    if (e.key === 'ArrowRight') gcPosX += gcSpeed;
+    
+    // Limitar movimiento dentro del contenedor
+    gcPosX = Math.max(0, Math.min(gcPosX, gcGame.offsetWidth - gcPlayer.offsetWidth));
+    gcPosY = Math.max(0, Math.min(gcPosY, gcGame.offsetHeight - gcPlayer.offsetHeight));
+    
+    gcPlayer.style.left = gcPosX + 'px';
+    gcPlayer.style.top = gcPosY + 'px';
+    gcCheckCollision();
+}
+
+    function gcNextLevel() {
+        clearInterval(gcTimer);
+        if (gcLevel < 5) {
+            gcLevel++;
+            gcGarbageTotal = gcLevelGoals[gcLevel - 1];
+            gcCollected = 0;
+            gcTimeLeft = 60;
+            gcClearGarbages();
+            gcCreateGarbage();
+            gcUpdateInfo();
+            gcStartTimer();
+        } else {
+            gcMessage.textContent = "🎉 ¡Completaste todos los niveles! 🧹";
+            gcMessage.style.display = 'block';
+            document.removeEventListener('keydown', gcMovePlayer);
+        }
+    }
+
+    function gcClearGarbages() {
+        document.querySelectorAll('#gc-game-container .garbage').forEach(g => g.remove());
+    }
+
+    function gcStartTimer() {
+        gcTimer = setInterval(() => {
+            gcTimeLeft--;
+            gcUpdateInfo();
+            if (gcTimeLeft <= 0) {
+                clearInterval(gcTimer);
+                if (gcCollected >= gcGarbageTotal) {
+                    gcNextLevel();
+                } else {
+                    gcMessage.textContent = "⏰ ¡Tiempo agotado! Intenta de nuevo.";
+                    gcMessage.style.display = 'block';
+                    document.removeEventListener('keydown', gcMovePlayer);
+                }
+            }
+        }, 1000);
+    }
+
+    function gcStartGame() {
+        gcLevel = 1;
+        gcCollected = 0;
+        gcTimeLeft = 60;
+        gcGarbageTotal = gcLevelGoals[0];
+        gcPosX = 100;
+        gcPosY = 100;
+        
+        gcPlayer.style.left = gcPosX + 'px';
+        gcPlayer.style.top = gcPosY + 'px';
+        gcClearGarbages();
+        gcCreateGarbage();
+        gcUpdateInfo();
+        gcMessage.style.display = 'none';
+        document.addEventListener('keydown', gcMovePlayer);
+        gcStartTimer();
+    }
+
+    gcRestartBtn.addEventListener('click', function() {
+        clearInterval(gcTimer);
+        gcStartGame();
+    });
+
+    // Iniciar el juego cuando se muestra la sección
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', function() {
+            if (this.getAttribute('data-section') === 'games') {
+                setTimeout(gcStartGame, 100);
+            }
+        });
+    });
+});
+
+    </script>
+    
+</body>
+</html>
